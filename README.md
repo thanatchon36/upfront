@@ -2,8 +2,8 @@
 
 [![ci](https://github.com/thanatchon36/upfront/actions/workflows/ci.yml/badge.svg)](https://github.com/thanatchon36/upfront/actions/workflows/ci.yml)
 [![coverage](https://codecov.io/gh/thanatchon36/upfront/graph/badge.svg)](https://codecov.io/gh/thanatchon36/upfront)
-[![PyPI](https://img.shields.io/pypi/v/upfront)](https://pypi.org/project/upfront/)
-[![Python](https://img.shields.io/pypi/pyversions/upfront)](https://pypi.org/project/upfront/)
+[![PyPI](https://img.shields.io/pypi/v/upfront?v=1)](https://pypi.org/project/upfront/)
+[![Python](https://img.shields.io/pypi/pyversions/upfront?v=1)](https://pypi.org/project/upfront/)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/thanatchon36/upfront/blob/main/LICENSE)
 
 See how many tokens your MCP servers, skills and instruction files cost a coding agent before
