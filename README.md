@@ -7,7 +7,7 @@
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue)](https://github.com/thanatchon36/upfront/blob/main/LICENSE)
 
 See how many tokens your MCP servers, skills and instruction files cost a coding agent before
-you type a word, and which tools will break in Claude Code, Codex, Gemini CLI or OpenCode.
+you type a word, and which tools will break in Claude Code, Codex, Gemini CLI, OpenCode or Cursor.
 
 ## The problem
 
@@ -67,7 +67,7 @@ upfront --yes    # also start/connect to each MCP server and count its tools
 
 ## Features
 
-- **Four harnesses, both scopes.** Reads Claude Code, Codex, Gemini CLI and OpenCode configs from the project and your home directory, including `${VAR:-default}` expansion and JSONC.
+- **Five harnesses, both scopes.** Reads Claude Code, Codex, Gemini CLI, OpenCode and Cursor configs from the project and your home directory, including `${VAR:-default}` expansion and JSONC.
 - **Real tool lists.** Talks to every stdio, Streamable HTTP and SSE server with the official MCP SDK, follows pagination, and reports failures (missing command, timeout, "auth required") per server instead of crashing.
 - **Where the tokens go.** Per server and per tool, skill metadata separately from skill bodies, and every instruction file.
 - **Compatibility checks with sources.** Tool names against OpenAI, Anthropic and Gemini rules, `$ref` parameters in Claude Code, non-standard formats in OpenCode, and Codex's skills budget. Every finding links the documentation or open issue it comes from.
@@ -103,12 +103,12 @@ More: [quickstart](https://github.com/thanatchon36/upfront/blob/main/docs/quicks
 - **Not the vendor's system prompt.** Only what you add is measured.
 - **Lazy loading isn't modelled.** Claude Code's tool search and OpenCode's lazy MCP loading defer some definitions; upfront reports their full cost.
 - **No OAuth.** Remote servers that need a login show "auth required; not measured". Headers from your config are sent; OAuth flows are not run.
-- **Root-level instruction files only**, and only the four CLI harnesses above (no Cursor or Windsurf yet).
+- **Root-level instruction files only**; Cursor currently contributes MCP server configurations only.
 - **Codex's 2% skills budget** depends on the model's window; upfront checks the documented 8,000-character fallback.
 
 ## Roadmap
 
-- **v0.2**: exact counts via vendor token-count APIs (opt-in), a `--fix` proxy that rewrites schemas per client, Cursor and Windsurf configs.
+- **v0.2**: exact counts via vendor token-count APIs (opt-in), a `--fix` proxy that rewrites schemas per client, and Windsurf configs.
 - **v0.3**: `upfront diff` between git refs for MCP server pull requests, and a GitHub Action.
 
 ## Contributing

@@ -8,6 +8,7 @@ Config formats follow each harness's documentation:
 - Gemini CLI: https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md
   (``mcpServers`` in ``.gemini/settings.json``; ``url`` is SSE, ``httpUrl`` is Streamable HTTP)
 - OpenCode: https://opencode.ai/docs/mcp-servers (``mcp`` in ``opencode.json[c]``)
+- Cursor: https://cursor.com/docs/mcp (``mcpServers`` in ``.cursor/mcp.json``)
 """
 
 from __future__ import annotations
@@ -21,8 +22,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Literal
 
-Harness = Literal["claude-code", "codex", "gemini-cli", "opencode"]
-HARNESSES: tuple[Harness, ...] = ("claude-code", "codex", "gemini-cli", "opencode")
+Harness = Literal["claude-code", "codex", "gemini-cli", "opencode", "cursor"]
+HARNESSES: tuple[Harness, ...] = ("claude-code", "codex", "gemini-cli", "opencode", "cursor")
 Transport = Literal["stdio", "http", "sse"]
 Scope = Literal["project", "local", "user"]
 
@@ -363,6 +364,58 @@ def _opencode(root: Path, home: Path) -> HarnessContext:
     return ctx
 
 
+def _cursor(root: Path, home: Path) -> HarnessContext:
+    """Read Cursor's project and user ``mcp.json`` files (https://cursor.com/docs/mcp)."""
+    ctx = HarnessContext("cursor")
+    sources: list[tuple[Path, Scope]] = [
+        (root / ".cursor" / "mcp.json", "project"),
+        (home / ".cursor" / "mcp.json", "user"),
+    ]
+    for path, scope in sources:
+        data = _load(path, ctx, "json")
+        servers = data.get("mcpServers") if isinstance(data, dict) else None
+        for name, entry in (servers or {}).items():
+            if not isinstance(entry, dict):
+                continue
+            kind = str(
+                entry.get(
+                    "type",
+                    "stdio" if "command" in entry else "http" if "url" in entry else "",
+                )
+            )
+            if kind == "stdio" and "command" in entry:
+                ctx.servers.append(
+                    ServerSpec(
+                        "cursor",
+                        name,
+                        scope,
+                        path,
+                        "stdio",
+                        command=str(entry["command"]),
+                        args=_str_list(entry.get("args")),
+                        env=_str_map(entry.get("env")),
+                    )
+                )
+            elif kind in ("http", "streamable-http", "sse") and "url" in entry:
+                ctx.servers.append(
+                    ServerSpec(
+                        "cursor",
+                        name,
+                        scope,
+                        path,
+                        "sse" if kind == "sse" else "http",
+                        url=str(entry["url"]),
+                        headers=_str_map(entry.get("headers")),
+                    )
+                )
+            else:
+                ctx.errors.append(
+                    f"{path}: server '{name}' skipped: needs \"command\" for stdio, "
+                    'or "url" for an HTTP/SSE server'
+                )
+    return ctx
+
+
 # --------------------------------------------------------------------------- #
 # Skills and instruction files
 # --------------------------------------------------------------------------- #
@@ -428,6 +481,7 @@ def discover(
         "codex": lambda: _codex(root, home),
         "gemini-cli": lambda: _gemini(root, home),
         "opencode": lambda: _opencode(root, home),
+        "cursor": lambda: _cursor(root, home),
     }
     found: dict[Harness, HarnessContext] = {h: readers[h]() for h in wanted}
     for ctx in found.values():

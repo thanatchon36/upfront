@@ -27,7 +27,7 @@ it works offline and gives the same numbers every time.
 
 | Option | What it does |
 |---|---|
-| `-H codex` | Only this harness (repeatable): `claude-code`, `codex`, `gemini-cli`, `opencode` |
+| `-H codex` | Only this harness (repeatable): `claude-code`, `codex`, `gemini-cli`, `opencode`, `cursor` |
 | `--top 10` | List the 10 heaviest tools per server (default 3) |
 | `--json` | Machine-readable report |
 | `--budget 20000` | Exit 1 if any harness loads more than 20,000 tokens up front |

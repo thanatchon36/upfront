@@ -25,6 +25,7 @@ releases.
 | Codex | `.codex/config.toml`, `~/.codex/config.toml` (`[mcp_servers.*]`) | `.agents/skills`, `~/.agents/skills` | `AGENTS.md`, `~/.codex/AGENTS.md` |
 | Gemini CLI | `.gemini/settings.json`, `~/.gemini/settings.json` (`mcpServers`) | none | `GEMINI.md`, `~/.gemini/GEMINI.md` |
 | OpenCode | `opencode.json[c]`, `~/.config/opencode/opencode.json[c]` (`mcp`) | `.opencode/skills`, `.claude/skills`, `.agents/skills` and the matching user folders | `AGENTS.md`, `~/.config/opencode/AGENTS.md` |
+| Cursor | `.cursor/mcp.json`, `~/.cursor/mcp.json` (`mcpServers`) | none | none |
 
 Only root-level instruction files are read; nested `AGENTS.md` files load when the agent
 works in that folder, not up front.
